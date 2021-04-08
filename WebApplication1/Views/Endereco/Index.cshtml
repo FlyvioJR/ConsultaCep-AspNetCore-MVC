@@ -1,0 +1,111 @@
+﻿@using ConsultaCep.Models.ViewModel
+@using ConsultaCep.Models
+@model ConsultaCep.Models.Endereco
+
+@{
+    ViewData["Title"] = "Consultar Cep";
+
+    var cep = Context.Request.Query["cep"];
+
+    Endereco endereco = new Endereco();
+
+    if (validaCep(cep))
+    {
+        endereco = ConsultaCep(cep);
+    }
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form id="teste">
+    <div class="form-group">
+        <label for="cep" control-label>Cep:</label>
+        <input type="search" name="cep" maxlength="9" />
+        <button type="submit" class="btn btn-primary">Pesquisar</button>
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(Model => Model.Cep)
+            </th>
+            <th>
+                @Html.DisplayNameFor(Model => Model.Logradouro)
+            </th>
+            <th>
+                @Html.DisplayNameFor(Model => Model.Complemento)
+            </th>
+            <th>
+                @Html.DisplayNameFor(Model => Model.Bairro)
+            </th>
+            <th>
+                @Html.DisplayNameFor(Model => Model.Localidade)
+            </th>
+            <th>
+                @Html.DisplayNameFor(Model => Model.UF)
+            </th>
+            <th>
+                @Html.DisplayNameFor(Model => Model.Populacao)
+            </th>
+            <th>
+                @Html.DisplayNameFor(Model => Model.DDD)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                @endereco.Cep
+            </td>
+            <td>
+                @endereco.Logradouro
+            </td>
+            <td>
+                @endereco.Complemento
+            </td>
+            <td>
+                @endereco.Bairro
+            </td>
+            <td>
+                @endereco.Localidade
+            </td>
+            <td>
+                @endereco.UF
+            </td>
+            <td>
+                @endereco.Populacao
+            </td>
+            <td>
+                @endereco.DDD
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+@functions {
+
+    public Endereco ConsultaCep(string cep)
+    {
+        var enderecoTask = new EnderecoViewModel().GetAddressAsync(cep);
+
+        enderecoTask.ContinueWith(task =>
+        {
+            Endereco enderecoTask = task.Result;
+        },
+        TaskContinuationOptions.OnlyOnRanToCompletion);
+
+        return enderecoTask.Result;
+    }
+
+    public bool validaCep(string cep)
+    {
+        if (cep == null)
+            return false;
+        if (cep != "" && cep.Replace("-", "").Length == 8)
+            return true;
+        else
+            return false;
+    }
+}
