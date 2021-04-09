@@ -9,7 +9,7 @@ namespace ConsultaCep.Models
     public class Endereco
     {
         [JsonProperty("cep")]
-        public string Cep { get; private set; }
+        public string CEP { get; private set; }
 
         [JsonProperty("logradouro")]
         public string Logradouro { get; private set; }

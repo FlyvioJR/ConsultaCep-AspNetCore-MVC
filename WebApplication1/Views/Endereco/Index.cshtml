@@ -3,25 +3,29 @@
 @model ConsultaCep.Models.Endereco
 
 @{
-    ViewData["Title"] = "Consultar Cep";
+    ViewData["Title"] = "Consulte um CEP";
 
     var cep = Context.Request.Query["cep"];
 
     Endereco endereco = new Endereco();
+    string mapa = "";
+    string cliqueAqui = "";
 
     if (validaCep(cep))
     {
         endereco = ConsultaCep(cep);
+        cliqueAqui = "Clique aqui para visualizar o endereço no mapa";
+        mapa = $"https://www.google.com/maps/place/{endereco.Logradouro}+{endereco.CEP}+{endereco.Localidade}";
     }
 }
 
 <h2>@ViewData["Title"]</h2>
 
-<form id="teste">
+<form>
     <div class="form-group">
-        <label for="cep" control-label>Cep:</label>
+        <label for="cep" control-label>CEP:</label>
         <input type="search" name="cep" maxlength="9" />
-        <button type="submit" class="btn btn-primary">Pesquisar</button>
+        <button class="btn btn-primary">Pesquisar</button>
     </div>
 </form>
 
@@ -29,7 +33,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(Model => Model.Cep)
+                @Html.DisplayNameFor(Model => Model.CEP)
             </th>
             <th>
                 @Html.DisplayNameFor(Model => Model.Logradouro)
@@ -57,7 +61,7 @@
     <tbody>
         <tr>
             <td>
-                @endereco.Cep
+                @endereco.CEP
             </td>
             <td>
                 @endereco.Logradouro
@@ -83,6 +87,12 @@
         </tr>
     </tbody>
 </table>
+
+<p>
+    <a href="@mapa" target="_blank">
+        @cliqueAqui
+    </a>
+</p>
 
 @functions {
 
